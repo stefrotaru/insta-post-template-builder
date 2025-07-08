@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>Instagram Quote Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Roboto", sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .instagram-post {
+            width: 1080px;
+            height: 1080px;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 120px 80px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .logo-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.15;
+            z-index: 1;
+            max-width: 400px;
+            max-height: 400px;
+            pointer-events: none;
+        }
+
+        .logo-placeholder {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .quote-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .quote-text {
+            font-size: 52px;
+            font-weight: 400;
+            line-height: 1.3;
+            color: #2c2c2c;
+            margin-bottom: 40px;
+            letter-spacing: -0.5px;
+        }
+        
+        .quote-author {
+            font-size: 32px;
+            font-weight: 300;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* if no author name, remove quote-text margin bottom */
+        .quote-container:has(.quote-author:empty) .quote-text {
+            margin-bottom: 0;
+        }
+
+        .quote-marks {
+            font-size: 120px;
+            color: #e0e0e0;
+            font-family: Georgia, serif;
+            line-height: 0.5;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .instagram-post {
+                width: 90vw;
+                height: 90vw;
+                max-width: 600px;
+                max-height: 600px;
+                padding: 60px 40px;
+            }
+            
+            .logo-placeholder {
+                width: 200px;
+                height: 200px;
+                font-size: 32px;
+            }
+            
+            .quote-text {
+                font-size: 32px;
+                margin-bottom: 24px;
+            }
+            
+            .quote-author {
+                font-size: 20px;
+            }
+            
+            .quote-marks {
+                font-size: 80px;
+                margin-bottom: 12px;
+            }
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .control-group input, .control-group textarea {
+            width: 250px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        .control-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .control-group input[type="range"] {
+            width: 200px;
+        }
+
+        .opacity-display {
+            font-size: 14px;
+            color: #666;
+            margin-left: 10px;
+        }
+
+        .font-size-tip {
+            background: #abcdff;
+            border: 1px solid #2762cf;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #1e1874;
+        }
+        .save-tip {
+            background: #e8f5e8;
+            border: 1px solid #28a745;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <div class="control-group">
+            <label for="quoteText">Quote Text:</label>
+            <textarea id="quoteText" placeholder="Enter your quote here...">Success is not final, failure is not fatal: it is the courage to continue that counts.</textarea>
+        </div>
+        
+        <div class="control-group">
+            <label for="authorText">Author:</label>
+            <input type="text" id="authorText" placeholder="Author name" value="Winston Churchill">
+        </div>
+        
+        <div class="control-group">
+            <label for="logoOpacity">Logo Opacity:</label>
+            <input type="range" id="logoOpacity" min="0" max="20" value="15" step="1">
+            <span class="opacity-display" id="opacityValue">15%</span>
+        </div>
+
+        <div class="control-group">
+            <label for="fontSize">Font size:</label>
+            <input type="range" id="fontSize" min="0" max="100" value="52" step="1">
+            <span class="opacity-display" id="fontSizeValue">52px</span>
+            <div class="font-size-tip">
+                <strong>Tip:</strong> Adjust the font size to fit your quote<br> 
+                perfectly. The author text will auto scale<br>
+                to 60% of the quote size.
+            </div>
+        </div>
+        <div class="control-group reset-font-size"></div>
+        
+        <div class="control-group">
+            <label for="logoFile">Upload Logo:</label>
+            <input type="file" id="logoFile" accept="image/*">
+        </div>
+
+        <div class="save-tip">
+            💡 <strong>How to save:</strong><br>
+            Click "Download PNG" button below, or use:<br>
+            <strong>Windows:</strong> Win + Shift + S → drag around post<br>
+            <strong>Mac:</strong> Cmd + Shift + 4 → drag around post<br>
+            Perfect 1080×1080px for Instagram!
+        </div>
+    </div>
+
+    <div class="instagram-post" id="instagramPost">
+        <div class="logo-watermark" id="logoWatermark">
+            <div class="logo-placeholder" id="logoPlaceholder">LOGO</div>
+            <!-- <img src="./logo_main.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;"> -->
+        </div>
+        
+        <div class="quote-container">
+            <div class="quote-text" id="displayQuote">Success is not final, failure is not fatal: it is the courage to continue that counts.</div>
+            <div class="quote-author" id="displayAuthor">— Winston Churchill</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
+    <script>
+        // Update quote text
+        document.getElementById('quoteText').addEventListener('input', function() {
+            const parsedText = this.value.split('\n');
+            let textToInsert = '';
+            parsedText.forEach(element => textToInsert += `<p>${element}</p><br>`);
+            document.getElementById('displayQuote').innerHTML = textToInsert;
+
+        });
+
+        // Update author text
+        document.getElementById('authorText').addEventListener('input', function() {
+            const author = this.value.trim();
+            document.getElementById('displayAuthor').textContent = author ? `— ${author}` : '';
+        });
+
+        // Update logo opacity
+        document.getElementById('logoOpacity').addEventListener('input', function() {
+            const opacity = this.value / 100;
+            document.getElementById('logoWatermark').style.opacity = opacity;
+            document.getElementById('opacityValue').textContent = this.value + '%';
+        });
+
+        // Update font size
+        document.getElementById('fontSize').addEventListener('input', function() {
+            const fontSize = this.value + 'px';
+            document.getElementById('displayQuote').style.fontSize = fontSize;
+            document.getElementById('displayAuthor').style.fontSize = parseInt(this.value) * 0.6 + 'px'; // 60% of quote size
+            document.getElementById('fontSizeValue').textContent = fontSize;
+        });
+
+        // Handle logo upload
+        document.getElementById('logoFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const logoWatermark = document.getElementById('logoWatermark');
+                    logoWatermark.innerHTML = '<img src="' + e.target.result + '" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Download using dom-to-image
+        function downloadPost() {
+            const node = document.getElementById('instagramPost');
+            const dateNow = new Date();
+            const formattedDate = dateNow.toISOString().slice(0, 10);
+            
+            domtoimage.toPng(node, {
+                width: 1080,
+                height: 1080,
+                style: {
+                    transform: 'scale(1)',
+                    transformOrigin: 'top left'
+                }
+            })
+            .then(function (dataUrl) {
+                const link = document.createElement('a');
+                link.download = 'insta-post__' + formattedDate + '.png';
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch(function (error) {
+                console.error('Download failed:', error);
+                alert('Download failed. Please try the screenshot method.');
+            });
+        }
+
+        // Hide/show controls for clean view
+        function toggleControls() {
+            const controls = document.querySelector('.controls');
+            controls.style.display = controls.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Add control buttons
+        const resetFontSizeContainer = document.querySelector('.reset-font-size');
+        const resetFontSizeBtn = document.createElement('button');
+        resetFontSizeBtn.textContent = 'Reset Font Size';
+        resetFontSizeBtn.style.cssText = 'width: 100%; padding: 12px; background: #f0ad4e; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;';
+        resetFontSizeBtn.onclick = function() {
+            document.getElementById('fontSize').value = 52;
+            document.getElementById('displayQuote').style.fontSize = '52px';
+            document.getElementById('displayAuthor').style.fontSize = '31.2px'; // 60% of 52px
+            document.getElementById('fontSizeValue').textContent = '52px';
+        };
+        resetFontSizeContainer.appendChild(resetFontSizeBtn);
+
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = 'margin-top: 15px; display: flex; flex-direction: column; gap: 8px;';
+
+        const downloadBtn = document.createElement('button');
+        downloadBtn.textContent = 'Download PNG';
+        downloadBtn.style.cssText = 'width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;';
+        downloadBtn.onclick = downloadPost;
+        
+        const hideBtn = document.createElement('button');
+        hideBtn.textContent = 'Hide Controls';
+        hideBtn.style.cssText = 'width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;';
+        hideBtn.onclick = toggleControls;
+        
+        buttonContainer.appendChild(downloadBtn);
+        buttonContainer.appendChild(hideBtn);
+        document.querySelector('.controls').appendChild(buttonContainer);
+    </script>
+</body>
+</html>
