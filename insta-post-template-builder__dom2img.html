@@ -13,47 +13,51 @@
     <title>Instagram Quote Template</title>
 </head>
 <body>
+    <button id="expand-collapse" style=""><</button>
+
     <div class="controls">
-        <div class="control-group">
-            <label for="quoteText">Quote Text:</label>
-            <!-- <textarea id="quoteText" placeholder="Enter your quote here...">Success is not final, failure is not fatal: it is the courage to continue that counts.</textarea> -->
-            <div id="editor"></div>
-        </div>
-        
-        <div class="control-group">
-            <label for="authorText">Author:</label>
-            <input type="text" id="authorText" placeholder="Author name" value="Winston Churchill">
-        </div>
-        
-        <div class="control-group">
-            <label for="logoOpacity">Logo Opacity:</label>
-            <input type="range" id="logoOpacity" min="0" max="20" value="15" step="1">
-            <span class="opacity-display" id="opacityValue">15%</span>
-        </div>
-
-        <div class="control-group">
-            <label for="fontSize">Font size:</label>
-            <input type="range" id="fontSize" min="0" max="100" value="52" step="1">
-            <span class="opacity-display" id="fontSizeValue">52px</span>
-            <div class="font-size-tip">
-                <strong>Tip:</strong> Adjust the font size to fit your quote<br> 
-                perfectly. The author text will auto scale<br>
-                to 60% of the quote size.
+        <div class="controls-content">
+            <div class="control-group">
+                <label for="quoteText">Quote Text:</label>
+                <!-- <textarea id="quoteText" placeholder="Enter your quote here...">Success is not final, failure is not fatal: it is the courage to continue that counts.</textarea> -->
+                <div id="editor"></div>
             </div>
-        </div>
-        <div class="control-group reset-font-size"></div>
+            
+            <div class="control-group">
+                <label for="authorText">Author:</label>
+                <input type="text" id="authorText" placeholder="Author name" value="Winston Churchill">
+            </div>
+            
+            <div class="control-group">
+                <label for="logoOpacity">Logo Opacity:</label>
+                <input type="range" id="logoOpacity" min="0" max="20" value="15" step="1">
+                <span class="opacity-display" id="opacityValue">15%</span>
+            </div>
         
-        <div class="control-group">
-            <label for="logoFile">Upload Logo:</label>
-            <input type="file" id="logoFile" accept="image/*">
-        </div>
-
-        <div class="save-tip">
-            💡 <strong>How to save:</strong><br>
-            Click "Download PNG" button below, or use:<br>
-            <strong>Windows:</strong> Win + Shift + S → drag around post<br>
-            <strong>Mac:</strong> Cmd + Shift + 4 → drag around post<br>
-            Perfect 1080×1080px for Instagram!
+            <div class="control-group">
+                <label for="fontSize">Font size:</label>
+                <input type="range" id="fontSize" min="0" max="100" value="52" step="1">
+                <span class="opacity-display" id="fontSizeValue">52px</span>
+                <div class="font-size-tip">
+                    <strong>Tip:</strong> Adjust the font size to fit your quote<br> 
+                    perfectly. The author text will auto scale<br>
+                    to 60% of the quote size.
+                </div>
+            </div>
+            <div class="control-group reset-font-size"></div>
+            
+            <div class="control-group">
+                <label for="logoFile">Upload Logo:</label>
+                <input type="file" id="logoFile" accept="image/*">
+            </div>
+        
+            <div class="save-tip">
+                💡 <strong>How to save:</strong><br>
+                Click "Download PNG" button below, or use:<br>
+                <strong>Windows:</strong> Win + Shift + S → drag around post<br>
+                <strong>Mac:</strong> Cmd + Shift + 4 → drag around post<br>
+                Perfect 1080×1080px for Instagram!
+            </div>
         </div>
     </div>
 
@@ -74,6 +78,22 @@
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
     <script>
+        // Toggle expand-collapse controls
+        function toggleControls() {
+            const controlsBtn = document.getElementById('expand-collapse');
+            const controls = document.querySelector('.controls');
+
+            if (controlsBtn.textContent === '<') {
+                controlsBtn.textContent = '>';
+            } else {
+                controlsBtn.textContent = '<';
+            }
+
+            controls.classList.toggle('hidden');
+        }
+
+        document.getElementById('expand-collapse').addEventListener('click', toggleControls);
+
         // Update author text
         document.getElementById('authorText').addEventListener('input', function() {
             const author = this.value.trim();
@@ -134,13 +154,10 @@
             });
         }
 
-        // Hide/show controls for clean view
-        function toggleControls() {
-            const controls = document.querySelector('.controls');
-            controls.style.display = controls.style.display === 'none' ? 'block' : 'none';
-        }
+
 
         // Add control buttons
+        // Claude really likes to over-engineer things, so let's inject the buttons all over the place
         const resetFontSizeContainer = document.querySelector('.reset-font-size');
         const resetFontSizeBtn = document.createElement('button');
         resetFontSizeBtn.textContent = 'Reset Font Size';
@@ -162,14 +179,8 @@
         downloadBtn.style.cssText = 'width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;';
         downloadBtn.onclick = downloadPost;
         
-        const hideBtn = document.createElement('button');
-        hideBtn.textContent = 'Hide Controls';
-        hideBtn.style.cssText = 'width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;';
-        hideBtn.onclick = toggleControls;
-        
         buttonContainer.appendChild(downloadBtn);
-        buttonContainer.appendChild(hideBtn);
-        document.querySelector('.controls').appendChild(buttonContainer);
+        document.querySelector('.controls-content').appendChild(buttonContainer);
 
         // Initialize Quill editor
         // Docs: https://quilljs.com/docs/quickstart
@@ -204,7 +215,6 @@
         quill.on('text-change', function(delta, oldDelta, source) {
             updateQuoteDisplay();
         });
-
     </script>
 </body>
 </html>

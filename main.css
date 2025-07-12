@@ -131,16 +131,45 @@ body {
   }
 }
 
-.controls {
-  width: 350px;
+
+/* Controls styling */
+
+#expand-collapse {
+  position: fixed;
+  z-index: 2;
+  top: 40px;
+  left: 40px;
+  background-color: rgb(240, 173, 78);
+  color: white;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.controls-content {
+  max-width: 350px;
+  height: calc(100vh - 40px);
+  overflow-y: auto;
   position: fixed;
   top: 20px;
   left: 20px;
   background: white;
-  padding: 20px;
+  padding: 75px 20px 20px 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  z-index: 1;
+
+  opacity: 1;
+  transform: translateX(0);
+  transition: 
+    opacity 0.2s ease 0.1s,
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+}
+.controls.hidden .controls-content {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .control-group {
