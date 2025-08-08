@@ -33,7 +33,7 @@
                 <input type="range" id="logoOpacity" min="0" max="20" value="15" step="1">
                 <span class="opacity-display" id="opacityValue">15%</span>
             </div>
-        
+    
             <div class="control-group">
                 <label for="fontSize">Font size:</label>
                 <input type="range" id="fontSize" min="0" max="100" value="52" step="1">
@@ -50,7 +50,7 @@
                 <label for="logoFile">Upload Logo:</label>
                 <input type="file" id="logoFile" accept="image/*">
             </div>
-        
+    
             <div class="save-tip">
                 💡 <strong>How to save:</strong><br>
                 Click "Download PNG" button below, or use:<br>
@@ -58,13 +58,15 @@
                 <strong>Mac:</strong> Cmd + Shift + 4 → drag around post<br>
                 Perfect 1080×1080px for Instagram!
             </div>
+
+            <button id="download-btn">Download PNG</button>
         </div>
     </div>
 
     <div class="instagram-post" id="instagramPost">
         <div class="logo-watermark" id="logoWatermark">
-            <div class="logo-placeholder" id="logoPlaceholder">LOGO</div>
-            <!-- <img src="./logo_main.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;"> -->
+            <!-- <div class="logo-placeholder" id="logoPlaceholder">LOGO</div> -->
+            <img src="./logo_main.png" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">
         </div>
         
         <div class="quote-container">
@@ -78,26 +80,21 @@
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
     <script>
-        // Toggle expand-collapse controls
-        function toggleControls() {
-            const controlsBtn = document.getElementById('expand-collapse');
-            const controls = document.querySelector('.controls');
+        // Update quote text
+        // document.getElementById('quoteText').addEventListener('input', function() {
+        //     const parsedText = this.value.split('\n');
+        //     let textToInsert = '';
+        //     parsedText.forEach(element => textToInsert += `<p>${element}</p><br>`);
+        //     document.getElementById('displayQuote').innerHTML = textToInsert;
 
-            if (controlsBtn.textContent === '<') {
-                controlsBtn.textContent = '>';
-            } else {
-                controlsBtn.textContent = '<';
-            }
+        // });
 
-            controls.classList.toggle('hidden');
-        }
-
-        document.getElementById('expand-collapse').addEventListener('click', toggleControls);
+        let authorText = '';
 
         // Update author text
         document.getElementById('authorText').addEventListener('input', function() {
-            const author = this.value.trim();
-            document.getElementById('displayAuthor').textContent = author ? `— ${author}` : '';
+            authorText = this.value.trim();
+            document.getElementById('displayAuthor').textContent = authorText ? `— ${authorText}` : '';
         });
 
         // Update logo opacity
@@ -138,8 +135,9 @@
                 width: 1080,
                 height: 1080,
                 style: {
-                    transform: 'scale(1)',
-                    transformOrigin: 'top left'
+                    // transform: 'scale(1)',
+                    // transformOrigin: 'top left'
+                    // 'font-family': 'Roboto, sans-serif;'
                 }
             })
             .then(function (dataUrl) {
@@ -154,10 +152,14 @@
             });
         }
 
-
+        // Hide/show controls for clean view
+        function toggleControls() {
+            const controls = document.querySelector('.controls');
+            controls.style.display = controls.style.display === 'none' ? 'block' : 'none';
+            hideBtn.textContent = controls.style.display === 'none' ? '>' : '<';
+        }
 
         // Add control buttons
-        // Claude really likes to over-engineer things, so let's inject the buttons all over the place
         const resetFontSizeContainer = document.querySelector('.reset-font-size');
         const resetFontSizeBtn = document.createElement('button');
         resetFontSizeBtn.textContent = 'Reset Font Size';
@@ -170,20 +172,13 @@
         };
         resetFontSizeContainer.appendChild(resetFontSizeBtn);
 
-
-        const buttonContainer = document.createElement('div');
-        buttonContainer.style.cssText = 'margin-top: 15px; display: flex; flex-direction: column; gap: 8px;';
-
-        const downloadBtn = document.createElement('button');
-        downloadBtn.textContent = 'Download PNG';
-        downloadBtn.style.cssText = 'width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;';
+        const downloadBtn = document.getElementById('download-btn');
+        const hideBtn = document.getElementById('expand-collapse');
+        hideBtn.onclick = toggleControls;
         downloadBtn.onclick = downloadPost;
         
-        buttonContainer.appendChild(downloadBtn);
-        document.querySelector('.controls-content').appendChild(buttonContainer);
 
         // Initialize Quill editor
-        // Docs: https://quilljs.com/docs/quickstart
         const quill = new Quill('#editor', {
             modules: {
                 toolbar: [
@@ -204,7 +199,6 @@
         // Set initial display
         updateQuoteDisplay();
 
-        // Update the quote display based on Quill content
         function updateQuoteDisplay() {
             console.log(quill.root)
             const htmlContent = quill.root.innerHTML;
@@ -215,6 +209,8 @@
         quill.on('text-change', function(delta, oldDelta, source) {
             updateQuoteDisplay();
         });
+
     </script>
+
 </body>
 </html>
